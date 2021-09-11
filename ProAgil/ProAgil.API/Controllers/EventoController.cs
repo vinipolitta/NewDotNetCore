@@ -45,17 +45,18 @@ namespace ProAgil.API.Controllers
             }
         }
 
-        [HttpGet("getByTema/{EventoId}")]
+       [HttpGet("getByTema/{tema}")]
         public async Task<IActionResult> Get(string tema)
         {
             try
-            {         
-                var results = await _repo.GetAllEventoAsyncByTema(tema, true);   
-                return  Ok(results);
+            {
+                var results = await _repo.GetAllEventoAsyncByTema(tema, true);
+
+                return Ok(results);
             }
             catch (System.Exception)
             {
-                return this.StatusCode(StatusCodes.Status500InternalServerError, "Banco de dados Falhou");
+                return this.StatusCode(StatusCodes.Status500InternalServerError, "Banco Dados Falhou");
             }
         }
 
@@ -80,7 +81,7 @@ namespace ProAgil.API.Controllers
             return BadRequest();
         }
 
-        [HttpPut]
+        [HttpPut("{EventoId}")]
         public async Task<IActionResult> Put(int EventoId, Evento model)
         {
             try
@@ -104,7 +105,7 @@ namespace ProAgil.API.Controllers
             return BadRequest();
         }
 
-        [HttpDelete]
+        [HttpDelete("{EventoId}")]
         public async Task<IActionResult> Delete(int EventoId)
         {
             try

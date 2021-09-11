@@ -5,7 +5,7 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { HttpClientModule } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { EventoService } from './services/evento.service';
@@ -15,6 +15,7 @@ import { EventosComponent } from './eventos/eventos.component';
 import { NavBarComponent } from './navBar/navBar.component';
 
 import { DateTimeFormatPipePipe } from './helper/DateTimeFormatPipe.pipe';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,9 @@ import { DateTimeFormatPipePipe } from './helper/DateTimeFormatPipe.pipe';
     AppRoutingModule,
     HttpClientModule,
     BrowserAnimationsModule,
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule,
+    BsDatepickerModule.forRoot()
   ],
   providers: [EventoService],
   bootstrap: [AppComponent]
