@@ -26,6 +26,7 @@ export class EventosComponent implements OnInit {
   modoSalvar = 'post'
   bodyDeletarEvento = '';
   dataEvento: any;
+  file: File[] = [];
   
   constructor(
     private eventoService: EventoService,
@@ -138,7 +139,11 @@ export class EventosComponent implements OnInit {
         
         this.evento = Object.assign({}, this.registerForm.value);
 
+        this.eventoService.postUpload(this.file).subscribe();
 
+        const nomeArquivo = this.evento.imagemURL.split('\\', 3);
+        this.evento.imagemURL = nomeArquivo[2];
+        
         this.eventoService.postEvento(this.evento).subscribe(
           (novoEvento) => {
             console.log(novoEvento);
@@ -166,4 +171,15 @@ export class EventosComponent implements OnInit {
       }
     }
   }
+
+    onFileChange(event: any) {
+    const reader = new FileReader();
+
+    if (event.target.files && event.target.files.length) {
+      this.file = event.target.files;
+      console.log(this.file);
+    }
+  }
+
+  
 }
