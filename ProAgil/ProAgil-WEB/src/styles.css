@@ -4,6 +4,10 @@
 @import '../node_modules/@fortawesome/fontawesome-free/css/all.min.css';
 @import '../node_modules/ngx-bootstrap/datepicker/bs-datepicker.css';
 
+#toastr-container > div {
+  opacity: 1;
+}
+
 @media (min-width: 1400px) {
   .container-sm {
     max-width: 2500px;

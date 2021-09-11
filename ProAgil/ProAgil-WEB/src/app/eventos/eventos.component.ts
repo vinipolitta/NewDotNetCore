@@ -1,11 +1,11 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder,  FormGroup, Validators } from '@angular/forms';
+import {  BsModalService } from 'ngx-bootstrap/modal';
 import { Evento } from '../models/Evento';
 import { EventoService } from '../services/evento.service';
 import { BsLocaleService } from 'ngx-bootstrap/datepicker';
 import { defineLocale, ptBrLocale } from 'ngx-bootstrap/chronos';
-import { templateJitUrl } from '@angular/compiler';
+import { ToastrService } from 'ngx-toastr';
 defineLocale('pt-br', ptBrLocale);
 
 @Component({
@@ -14,6 +14,7 @@ defineLocale('pt-br', ptBrLocale);
   styleUrls: ['./eventos.component.css'],
 })
 export class EventosComponent implements OnInit {
+  titulo = 'Eventos';
    _filtroLista: any;   
   eventosFiltrados: Evento[] = [];
   eventos: Evento[] = [];
@@ -24,12 +25,14 @@ export class EventosComponent implements OnInit {
   registerForm!: FormGroup
   modoSalvar = 'post'
   bodyDeletarEvento = '';
+  dataEvento: any;
   
   constructor(
     private eventoService: EventoService,
     private modalService: BsModalService,
     private fb: FormBuilder,
-    private bsLocaleService: BsLocaleService
+    private bsLocaleService: BsLocaleService,
+    private toastr: ToastrService
   ) { 
     this.bsLocaleService.use('pt-br')
   }
@@ -62,6 +65,7 @@ export class EventosComponent implements OnInit {
     );
   }
 
+  // ABRE OS MODAIS
   openModal(template: any) {
     this.registerForm.reset();
     template.show();
@@ -73,6 +77,8 @@ export class EventosComponent implements OnInit {
   }
 
   editarEvento(evento: Evento, template: any) {
+    console.log(evento, template);
+
     this.modoSalvar = 'put'
     this.openModal(template);
     this.evento = evento;
@@ -91,8 +97,10 @@ export class EventosComponent implements OnInit {
       () => {
           template.hide();
           this.getEventos();
+          this.toastr.success('Deletado com Sucesso!');
         }, error => {
           console.log(error);
+          this.toastr.error(`Erro ao Deletar: ${error}`);
         }
     );
   }
@@ -103,10 +111,11 @@ export class EventosComponent implements OnInit {
       {
         this.eventos = _eventos
         this.eventosFiltrados = this.eventos;
-        console.log(_eventos);
       },
       error => {
         console.log(error);
+        this.toastr.error(`Erro ao tentar carregar eventos: ${error}`);
+
       }
     )
   }
@@ -122,33 +131,39 @@ export class EventosComponent implements OnInit {
       imagemURL: ['', Validators.required]
     })
   }
-
+  
   salvarAlteracao(template: any) {
-    if(this.registerForm.valid) {
+    if (this.registerForm.valid) {
       if (this.modoSalvar === 'post') {
-        this.evento = Object.assign({id: this.evento}, this.registerForm.value);
+        
+        this.evento = Object.assign({}, this.registerForm.value);
+
+
         this.eventoService.postEvento(this.evento).subscribe(
-          novoEvento => {
+          (novoEvento) => {
             console.log(novoEvento);
+
             template.hide();
             this.getEventos();
+            this.toastr.success('Inserido com Sucesso!');
           }, error => {
-            console.log(error);
-            
+            this.toastr.error(`Erro ao Inserir: ${error}`);
           }
-        );        
+        );
       } else {
-        this.evento = Object.assign({id: this.evento.id}, this.registerForm.value);
+        this.evento = Object.assign({ id: this.evento.id }, this.registerForm.value);
+
+
         this.eventoService.putEvento(this.evento).subscribe(
-          novoEvento => {
-            console.log(novoEvento);
+          () => {
             template.hide();
             this.getEventos();
+            this.toastr.success('Editado com Sucesso!');
           }, error => {
-            console.log(error);            
+            this.toastr.error(`Erro ao Editar: ${error}`);
           }
-        );        
+        );
       }
     }
-  }  
+  }
 }
