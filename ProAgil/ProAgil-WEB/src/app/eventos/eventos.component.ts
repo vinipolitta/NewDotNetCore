@@ -82,8 +82,9 @@ export class EventosComponent implements OnInit {
 
     this.modoSalvar = 'put'
     this.openModal(template);
-    this.evento = evento;
-    this.registerForm.patchValue(evento);
+    this.evento = Object.assign({}, evento) ;
+    this.evento.imagemURL = '';
+    this.registerForm.patchValue(this.evento);
   }
 
   excluirEvento(evento: Evento, template: any) {
@@ -132,22 +133,22 @@ export class EventosComponent implements OnInit {
       imagemURL: ['', Validators.required]
     })
   }
+
+  uploadImagem() {
+    const nomeArquivo = this.evento.imagemURL.split('\\', 3);
+    this.evento.imagemURL = nomeArquivo[2];
+    this.eventoService.postUpload(this.file, nomeArquivo[2]).subscribe();
+  }
   
   salvarAlteracao(template: any) {
     if (this.registerForm.valid) {
-      if (this.modoSalvar === 'post') {
-        
+      if (this.modoSalvar === 'post') {        
         this.evento = Object.assign({}, this.registerForm.value);
+        this.uploadImagem();    
 
-        this.eventoService.postUpload(this.file).subscribe();
-
-        const nomeArquivo = this.evento.imagemURL.split('\\', 3);
-        this.evento.imagemURL = nomeArquivo[2];
-        
         this.eventoService.postEvento(this.evento).subscribe(
           (novoEvento) => {
             console.log(novoEvento);
-
             template.hide();
             this.getEventos();
             this.toastr.success('Inserido com Sucesso!');
@@ -157,8 +158,7 @@ export class EventosComponent implements OnInit {
         );
       } else {
         this.evento = Object.assign({ id: this.evento.id }, this.registerForm.value);
-
-
+        this.uploadImagem();
         this.eventoService.putEvento(this.evento).subscribe(
           () => {
             template.hide();
