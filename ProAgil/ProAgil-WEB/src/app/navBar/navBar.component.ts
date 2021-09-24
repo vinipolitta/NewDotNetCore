@@ -39,4 +39,8 @@ export class NavBarComponent implements OnInit {
     return sessionStorage.getItem('username')
   }
 
+  showMenu() {
+    return this.router.url !== '/user/login'
+  }
+
 }
