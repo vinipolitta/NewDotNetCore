@@ -64,7 +64,7 @@ export class EventosComponent implements OnInit {
   filtrarEventos(filtrarPor: string): Evento[] {
     filtrarPor = filtrarPor.toLocaleLowerCase();
     return this.eventos.filter(
-      evento => evento.tema.toLocaleLowerCase().indexOf(filtrarPor) !== -1
+      evento => evento.tema!.toLocaleLowerCase().indexOf(filtrarPor) !== -1
     );
   }
 
@@ -84,7 +84,7 @@ export class EventosComponent implements OnInit {
     this.modoSalvar = 'put'
     this.openModal(template);
     this.evento = Object.assign({}, evento) ;
-    this.fileNameToUpdate = evento.imagemURL.toString();
+    this.fileNameToUpdate = evento.imagemURL!.toString();
     this.evento.imagemURL = '';
     this.registerForm.patchValue(this.evento);
   }
@@ -125,6 +125,8 @@ export class EventosComponent implements OnInit {
   }
 
   validation() {
+    this.dataAtual = new Date().getMilliseconds().toString();
+
     this.registerForm = this.fb.group({
       tema: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(50)]],
       local: ['', [Validators.required, Validators.minLength(4)]],
@@ -138,7 +140,7 @@ export class EventosComponent implements OnInit {
 
   uploadImagem() {
     if (this.modoSalvar === 'post'){
-      const nomeArquivo = this.evento.imagemURL.split('\\', 3);
+      const nomeArquivo = this.evento.imagemURL!.split('\\', 3);
       this.evento.imagemURL = nomeArquivo[2];
       this.eventoService.postUpload(this.file, nomeArquivo[2]).subscribe(
         () => {

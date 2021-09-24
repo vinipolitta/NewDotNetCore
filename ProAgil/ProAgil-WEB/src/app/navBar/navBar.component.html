@@ -17,9 +17,9 @@
       <li class="nav-item dropdown" dropdown>
         <a dropdownToggle class="nav-link dropdown-toggle" 
         
-          style="cursor: pointer" id="navbarDropdownMenuLink" data-toggle="dropdown"
-          aria-haspopup="true" aria-expanded="false">
-          {{ authService.decodedToken?.unique_name  | uppercase}}
+          style="cursor: pointer; text-transform:  capitalize;" id="navbarDropdownMenuLink" data-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false" >
+          {{ userName() }}
         </a>
         <div *dropdownMenu class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
           <a class="dropdown-item">

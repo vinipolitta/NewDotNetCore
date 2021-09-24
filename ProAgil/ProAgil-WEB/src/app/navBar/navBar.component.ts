@@ -32,6 +32,11 @@ export class NavBarComponent implements OnInit {
 
   entrar() {
     this.router.navigate(['/user/login']);
+    
+  }
+
+  userName() {
+    return sessionStorage.getItem('username')
   }
 
 }
